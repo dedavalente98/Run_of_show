@@ -53,7 +53,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter'
 .split{display:flex;flex:1;overflow:hidden;gap:0}
 
 /* LEFT: table */
-.pane-left{display:flex;flex-direction:column;flex:0 0 55%;border-right:2px solid var(--border);overflow:hidden}
+.pane-left{display:flex;flex-direction:column;flex:0 0 50%;border-right:2px solid var(--border);overflow:hidden}
 .pane-left .content{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
 
 /* RIGHT: detail panel */
@@ -92,7 +92,8 @@ td{padding:0;vertical-align:top;border-bottom:1px solid rgba(30,40,100,.07)}
 
 /* header area */
 .dl-header{margin-bottom:20px}
-.dl-num{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px}
+.dl-num{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+.dl-section{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
 .dl-name{font-size:clamp(22px,3vw,34px);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.01em}
 .dl-speaker{font-size:15px;color:rgba(255,255,255,.55);margin-top:6px;font-weight:500}
 
@@ -244,6 +245,7 @@ td{padding:0;vertical-align:top;border-bottom:1px solid rgba(30,40,100,.07)}
       <div class="detail-live" id="detailLive" style="display:none">
         <div class="dl-header">
           <div class="dl-num" id="dlNum">ITEM 01</div>
+          <div class="dl-section" id="dlSection"></div>
           <div class="dl-name" id="dlName">—</div>
           <div class="dl-speaker" id="dlSpeaker"></div>
         </div>
@@ -271,10 +273,6 @@ td{padding:0;vertical-align:top;border-bottom:1px solid rgba(30,40,100,.07)}
           <div class="dl-field">
             <div class="dl-field-lbl lbl-start">&#128344; Hora início</div>
             <div class="dl-field-val" id="dlStart">—</div>
-          </div>
-          <div class="dl-field">
-            <div class="dl-field-lbl lbl-dur">&#8987; Duração</div>
-            <div class="dl-field-val" id="dlDur">—</div>
           </div>
           <div class="dl-field">
             <div class="dl-field-lbl lbl-audio">&#127897; Audio</div>
@@ -381,8 +379,9 @@ function renderDetail(){
     if(live)live.style.display='none';
     return;
   }
-  var r=null,num=0,cnt=0;
+  var r=null,num=0,cnt=0,sectionName='';
   for(var i=0;i<rows.length;i++){
+    if(rows[i].type==='sec')sectionName=rows[i].name||'';
     if(rows[i].type==='item')cnt++;
     if(rows[i].id===liveCue){r=rows[i];num=cnt;break;}
   }
@@ -402,10 +401,10 @@ function renderDetail(){
   }
 
   setTxt('dlNum','ITEM '+String(num).padStart(2,'0'));
+  setTxt('dlSection',sectionName,'');
   setTxt('dlName',r.name);
   setTxt('dlSpeaker',r.speaker,'');
   setTxt('dlStart',r.start);
-  setTxt('dlDur',fmtDur(r.dur));
   setTxt('dlAudio',r.audio);
   setTxt('dlVideo',r.video);
   setTxt('dlLights',r.lights);
